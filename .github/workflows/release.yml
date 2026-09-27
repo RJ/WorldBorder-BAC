@@ -1,0 +1,62 @@
+name: Release datapack
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Validate release tag
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          if [[ ! "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo 'Expected a tag such as v1.0.0.' >&2
+            exit 1
+          fi
+
+      - name: Check datapack
+        run: python3 -m unittest discover -s tests -v
+
+      - name: Build release asset
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          python3 tools/build.py
+          mkdir -p release-assets
+          cp dist/WorldBorder-BAC-26.3.zip "release-assets/WorldBorder-BAC-26.3-${RELEASE_TAG}.zip"
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          asset="release-assets/WorldBorder-BAC-26.3-${RELEASE_TAG}.zip"
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            gh release upload "$RELEASE_TAG" "$asset" --clobber
+          else
+            gh release create "$RELEASE_TAG" "$asset" \
+              --verify-tag \
+              --title "WorldBorder BAC ${RELEASE_TAG} (Minecraft 26.3)" \
+              --generate-notes
+          fi

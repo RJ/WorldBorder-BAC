@@ -56,6 +56,27 @@ Borders are dimension-specific in 26.3. To move their centers, run
 `/execute in minecraft:overworld run worldborder center <x> <z>` and repeat for
 `minecraft:the_nether` and `minecraft:the_end` if you want matching centers.
 
+## Publishing a release
+
+The `Release datapack` GitHub Actions workflow runs when a tag such as `v1.0.0`
+is pushed. It runs the regression checks, builds a fresh ZIP from the tagged
+source, and publishes a GitHub Release with generated notes and an asset named
+`WorldBorder-BAC-26.3-v1.0.0.zip`. It uses GitHub's built-in token; no additional
+secret is needed. Re-running the workflow replaces the asset on the same release.
+
+Commit the workflow and your changes before tagging. From the release commit:
+
+```sh
+git tag -a v1.0.0 -m "Release v1.0.0"
+git push origin v1.0.0
+```
+
+Use the remote for the repository where you want the release (`rj` instead of
+`origin` if that is your publishing repository). GitHub Actions must be enabled
+there. Tags must have exactly three numeric components; prerelease suffixes are
+not supported. The workflow must exist in the tagged commit, but does not have
+to be on the default branch.
+
 ## How it works and what changed
 
 BACAP updates the global `bac_obtained` scoreboard whenever a player completes
