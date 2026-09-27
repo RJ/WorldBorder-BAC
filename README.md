@@ -69,6 +69,27 @@ Borders are dimension-specific in 26.3. To move their centers, run
 `/execute in minecraft:overworld run worldborder center <x> <z>` and repeat for
 `minecraft:the_nether` and `minecraft:the_end` if you want matching centers.
 
+## Recovering a stopped border
+
+Older builds could permanently stop the reward queue after a zero-growth
+advancement: the reward took the animation lock, but Minecraft rejected its
+zero-second unlock schedule. This build credits those entries without locking
+or attempting a border change.
+
+If the border is already stuck and no longer animating, replace the addon ZIP,
+then run these operator commands:
+
+```mcfunction
+/reload
+/function bc_wb:untask
+```
+
+Reload resumes polling; `untask` releases the stale lock. Neither resets the
+border, player join bonuses, or credited advancements. Pending BACAP completions
+will be processed normally. Do not use the configuration menu's challenge reset
+to recover from this bug. Only force the lock open when growth has actually
+stopped, since doing so during a valid animation could interrupt that reward.
+
 ## Publishing a release
 
 The `Release datapack` GitHub Actions workflow runs when a tag such as `v1.0.0`

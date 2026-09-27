@@ -15,6 +15,22 @@ LOOP = re.compile(
 
 
 class PackTests(unittest.TestCase):
+    def test_animation_lock_always_has_a_valid_unlock(self):
+        # /schedule accepts 0s while parsing but rejects it at execution time.
+        # Every reward that takes the global lock must release it after growth.
+        for path in (FUNCTIONS / "reward").rglob("*.mcfunction"):
+            body = path.read_text()
+            if "scoreboard players set is_wb_run wb 0" not in body:
+                continue
+            with self.subTest(reward=str(path.relative_to(FUNCTIONS))):
+                unlock = re.search(r"schedule function bc_wb:untask (\d+)s", body)
+                self.assertIsNotNone(unlock, "Animation lock has no scheduled release")
+                seconds = int(unlock[1])
+                self.assertGreater(seconds, 0, "Zero-delay schedules fail at runtime and strand the lock")
+                durations = re.findall(r"worldborder add \S+ (\d+)", body)
+                self.assertTrue(durations, "A reward with no animation must not take the lock")
+                self.assertGreaterEqual(seconds, max(map(int, durations)))
+
     def test_all_rewards_use_shared_persistent_ledger(self):
         modes = []
         for name in ("main", "fast_main"):
