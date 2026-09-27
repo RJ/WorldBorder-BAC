@@ -1,0 +1,1 @@
+scoreboard players set blazeandcave:monsters/the_wicked_witch_of_the_west wb 1

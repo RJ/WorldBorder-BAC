@@ -1,4 +1,5 @@
 function bc_wb:config
+schedule clear bc_wb:untask
 execute run scoreboard objectives remove wb
 execute run scoreboard objectives add wb dummy
 execute run advancement revoke @a everything
@@ -6,6 +7,8 @@ execute run scoreboard objectives remove bac_obtained
 execute run scoreboard objectives add bac_obtained dummy
 execute run scoreboard players set is_wb_run wb 1
 execute in minecraft:overworld run worldborder set 1
+execute in minecraft:the_nether run worldborder set 1
+execute in minecraft:the_end run worldborder set 1
 execute run scoreboard players set first_time wb 1
 execute run tp @a[gamemode=!creative,gamemode=!spectator] ~ 321 ~
 execute run effect give @a[gamemode=!creative,gamemode=!spectator] minecraft:blindness 10 255 false

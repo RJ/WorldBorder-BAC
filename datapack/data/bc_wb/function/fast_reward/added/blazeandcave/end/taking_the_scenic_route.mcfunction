@@ -1,0 +1,5 @@
+execute in minecraft:overworld run worldborder add 50
+execute in minecraft:the_nether run worldborder add 50
+execute in minecraft:the_end run worldborder add 50
+scoreboard players set blazeandcave:end/taking_the_scenic_route wb 1
+tellraw @a {"text": " +25 Blocks", "color": "#B2FFEE", "hover_event": {"action": "show_text", "value": {"translate": "Taking the Scenic Route"}}}

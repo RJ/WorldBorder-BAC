@@ -1,6 +1,13 @@
 {
   "pack": {
-	"pack_format": 48,
-	"description": "WB for BACAP - adds worldborder for advancements"
+    "min_format": [
+      121,
+      0
+    ],
+    "max_format": [
+      121,
+      0
+    ],
+    "description": "Shared World Border for BACAP 1.21.1 / Minecraft 26.3"
   }
 }
