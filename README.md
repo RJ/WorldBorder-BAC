@@ -30,6 +30,19 @@ border. Two different advancements both contribute, even when earned together.
 Players keep their individual advancement progress; this addon does not grant
 advancements to other players or change BACAP's cooperative/reward settings.
 
+Each player's first join observed by this addon also gives a **one-time +1 block
+on each border edge** (+2 diameter) in all three dimensions. Chat announces the
+player and the bonus. Reconnecting, restarting the server, or reloading does not
+award it again. New players are detected by the one-second timer; their bonuses
+are queued until any current border animation finishes, and remain queued even
+if they disconnect. One queued bonus is applied per second while the border is
+idle. When upgrading an existing world, existing players also receive the bonus
+the first time they are observed after this feature is installed.
+
+The player marker survives the menu's challenge resets, so previously seen
+players do not receive another bonus after a reset. A challenge reset discards
+any still-pending join bonuses along with the advancement ledger.
+
 The Overworld, Nether and End receive equal diameter increments. Modded
 additional dimensions are not managed. Existing reward balancing is retained:
 normal mode generally moves each edge out by 1 block for a task, 5 for a goal,
